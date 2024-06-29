@@ -13,8 +13,10 @@ export const Quiz = () => {
     const [isSelected, setIsSelected] = useState(false)
     const [time, setTime] = useState(false)
 
-
-    const reflist = [...questionsAndAnswers[questionNumber].shuffleAnswers];
+    const refget = questionsAndAnswers[questionNumber].shuffleAnswers.map((item) => {
+        return unescape(item)
+    })
+    const reflist = [...refget];
     const elementsRef = useRef(reflist.map(() => createRef()));
     // const elementArray = [elementsRef]
     // const elementsRefString = JSON.stringify(elementsRef);
@@ -66,7 +68,8 @@ export const Quiz = () => {
 
         // console.log('myRefs is ' + myRefs)
         // const showRef = JSON.stringify(myRefs)
-        console.log('refLists is ' + reflist)
+        // console.log('refLists is ' + reflist)
+        // console.log('refGets is ' + refget)
         // console.log('elementArray is ' + JSON.stringify(elementsRef.current))
         // console.log('ElementRefString is ' + elementsRef.current[0])
         // console.log(typeof elementsRef)
@@ -91,7 +94,7 @@ export const Quiz = () => {
             setShowPrev(false)
         }
 
-        console.log('score is ' + score)
+        // console.log('score is ' + score)
 
     }, [questionNumber, questionsAndAnswers, score])
 
@@ -102,7 +105,7 @@ export const Quiz = () => {
     const checkAnswer = (e, val) => {
         // setIsSelected(true)
         if (e.currentTarget.dataset.id === val[questionNumber].correctAnswer) {
-            console.log('Correct')
+            // console.log('Correct')
             // setCorrect(true)
             setScore(score + 1)
             e.currentTarget.classList.add('correct')
@@ -118,7 +121,7 @@ export const Quiz = () => {
 
             })
 
-            console.log(val[questionNumber].correctAnswer)
+            // console.log(val[questionNumber].correctAnswer)
             // optionArray[questionsAndAnswers[questionNumber].correctAnswer].current.classList.add('correct')
             // e.currentTarget.classList.add('correct')
             // val[questionNumber].correctAnswer.classList.add('correct')

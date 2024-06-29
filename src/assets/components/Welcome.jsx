@@ -39,7 +39,8 @@ export const Welcome = () => {
 
         }
         catch (err) {
-            console.log(err)
+            // console.log(err)
+            alert(err.message)
         }
 
     }
