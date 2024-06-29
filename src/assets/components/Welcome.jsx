@@ -46,6 +46,8 @@ export const Welcome = () => {
 
 
 
+   
+
     function shuffleArray(array) {
         for (var i = array.length - 1; i > 0; i--) {
 
@@ -87,7 +89,7 @@ export const Welcome = () => {
                                 <option value="11">Entertainment: Film</option>
                                 <option value="12">Entertainment: Music</option>
                                 <option value="13">Entertainment: Musicals &amp; Theatres</option>
-                                <option value="14">Entertainment: Television</option>
+                                <option value="14">Entertainment: Television</option>   
                                 <option value="15">Entertainment: Video Games</option>
                                 <option value="16">Entertainment: Board Games</option>
                                 <option value="17">Science &amp; Nature</option>

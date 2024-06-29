@@ -27,20 +27,26 @@ div#root {
     text-shadow: 4px 0px rgba(255, 81, 47, .73)
 }
 
-.animate_50ms, .animate_1ms {
+.animate_50ms,
+.animate_1ms {
     -webkit-animation-delay: 50ms;
     animation-delay: 50ms;
 }
 
-.animate_350ms, .animate_3ms {
+.animate_350ms,
+.animate_3ms {
     -webkit-animation-delay: 350ms;
     animation-delay: 350ms;
 }
-.animate_200ms, .animate_2ms {
+
+.animate_200ms,
+.animate_2ms {
     -webkit-animation-delay: 200ms;
     animation-delay: 200ms;
 }
-.animate_500ms, .animate_4ms {
+
+.animate_500ms,
+.animate_4ms {
     -webkit-animation-delay: 500ms;
     animation-delay: 500ms;
 }
@@ -48,9 +54,11 @@ div#root {
 .correct {
     background-color: green;
     color: #fff;
+    transition: .5s all;
 }
 
 .wrong {
     background-color: red;
     color: #fff;
+    transition: .5s all;
 }

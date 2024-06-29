@@ -15,7 +15,7 @@ function App() {
   const [questionsLoad, setQuestionsLoad] = useState(false)
   const [name, setName] = useState('')
   const [score, setScore] = useState(0)
-  const [playAudio, setPlayAudio] = useState(new Audio(audio));
+  const [playAudio, setPlayAudio] =useState(new Audio(audio));
 
 
   // const [storeIncomplete, setStoreIncomplete] = useState([])

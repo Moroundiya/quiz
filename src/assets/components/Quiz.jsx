@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
 import { QuizContext } from '../../App'
 import { escape, unescape } from 'yizhi-html-escape'
 import watch from '../images/watch.png'
@@ -6,13 +6,21 @@ import Countdown from "react-countdown";
 // import Countdown360 from 'react-countdown360'
 
 export const Quiz = () => {
-
+    const { setPage, questions, questionNumber, setQuestionNumber, questionsAndAnswers, setScore, score, playAudio } = useContext(QuizContext)
     const [loading, setLoading] = useState(true)
     const [submitBtn, setSubmitBtn] = useState(false)
     const [showPrev, setShowPrev] = useState(false)
     const [isSelected, setIsSelected] = useState(false)
+    const [time, setTime] = useState(false)
 
-    const { setPage, questions, questionNumber, setQuestionNumber, questionsAndAnswers, setScore, score, playAudio } = useContext(QuizContext)
+
+    const reflist = [...questionsAndAnswers[questionNumber].shuffleAnswers];
+    const elementsRef = useRef(reflist.map(() => createRef()));
+    // const elementArray = [elementsRef]
+    // const elementsRefString = JSON.stringify(elementsRef);
+
+    // let optionArray = [option1, option2, option3, option4]
+
 
     const Completionist = () => <span className='color text-2xl mt-1' >00:00</span>;
 
@@ -28,13 +36,20 @@ export const Quiz = () => {
             seconds = seconds
             minutes = minutes
         }
-        if (completed) {
-            // Render a complete state
-            alert('Your time is up for this question, please move to next question.')
-            setIsSelected(true)
+
+        if (isSelected) {
             return (
                 <Completionist />
             )
+        }
+
+        if (completed) {
+            // Render a complete state
+            setIsSelected(true)
+            alert("Your time is up for this particular question, you can't pick any answer again kindly move to the next question.")
+            // return (
+            // <Completionist />
+            // )
 
         } else {
             // Render a countdown
@@ -43,10 +58,20 @@ export const Quiz = () => {
                     {minutes}:{seconds}
                 </span>
             );
+
         }
     };
 
     useEffect(() => {
+
+        // console.log('myRefs is ' + myRefs)
+        // const showRef = JSON.stringify(myRefs)
+        console.log('refLists is ' + reflist)
+        // console.log('elementArray is ' + JSON.stringify(elementsRef.current))
+        // console.log('ElementRefString is ' + elementsRef.current[0])
+        // console.log(typeof elementsRef)
+        // console.dir(elementsRef.current)
+
 
 
         setTimeout(() => {
@@ -70,6 +95,10 @@ export const Quiz = () => {
 
     }, [questionNumber, questionsAndAnswers, score])
 
+
+    const highlightAnswer = () => {
+
+    }
     const checkAnswer = (e, val) => {
         // setIsSelected(true)
         if (e.currentTarget.dataset.id === val[questionNumber].correctAnswer) {
@@ -78,13 +107,30 @@ export const Quiz = () => {
             setScore(score + 1)
             e.currentTarget.classList.add('correct')
         } else {
-            console.log('Wrong')
+            // console.log('Wrong')
             e.currentTarget.classList.add('wrong')
+
+            elementsRef.current.map((ele) => {
+
+                if (ele.current.dataset.id === questionsAndAnswers[questionNumber].correctAnswer) {
+                    ele.current.classList.add('correct')
+                }
+
+            })
+
+            console.log(val[questionNumber].correctAnswer)
+            // optionArray[questionsAndAnswers[questionNumber].correctAnswer].current.classList.add('correct')
+            // e.currentTarget.classList.add('correct')
+            // val[questionNumber].correctAnswer.classList.add('correct')
 
             // setCorrect(false)
         }
 
+        // val[questionNumber].correctAnswer.current.classList.add('correct')
+
         setIsSelected(true)
+
+
 
     }
 
@@ -92,6 +138,7 @@ export const Quiz = () => {
         playAudio.pause();
         playAudio.currentTime = 0;
     }
+
 
     return (
         <>
@@ -114,7 +161,6 @@ export const Quiz = () => {
                         <p className='absolute bottom-2 text-center w-full text-white opacity-40 text-sm left-0'>Designed by Moroundiya 😎</p>
                         <div className='w-full flex lg:w-3/5 justify-between items-center'>
                             <h1 className='text-3xl font-paci font-regular color h-auto py-2 pe-1 animate__animated animate__zoomIn'>iQuiz</h1>
-
                             <div className='flex justify-center items-center space-x-2'>
                                 <img src={watch} className='w-[23px] h-[26px]' alt="" />
                                 <Countdown date={Date.now() + 45000} renderer={renderer} key={questionNumber} />
@@ -122,11 +168,9 @@ export const Quiz = () => {
 
                             </div>
                         </div>
-
-
                         <div className='w-full md:w-4/5 lg:w-3/5 2xl:w-3/6 mt-10 md:mt-24 h-auto bg-white rounded-xl md:rounded-3xl overflow-hidden'>
-                            <div className='bg-[#F7F8FA] px-5 py-10 h-auto flex flex-col xl:px-8 justify-center items-center relative' key={questionNumber}>
-                                <div className='bg-color text-sm text-white inline-block px-4 py-1 rounded-3xl absolute -bottom-3 font-semibold'>
+                            <div className='bg-[#F7F8FA] px-5 py-10 h-auto flex flex-col xl:px-16 xl:py-16 justify-center items-center relative' key={questionNumber}>
+                                <div className='bg-color text-sm text-white inline-block px-4 py-1 xl:text-lg rounded-3xl absolute -bottom-3 font-semibold'>
                                     <h1>QUESTION <span>{questionNumber + 1}</span>/<span>{questions.length}</span></h1>
                                 </div>
                                 <h1 className={`text-xl lg:text-3xl uppercase text-center font-bold animate__animated animate__fadeInDown`}>
@@ -139,12 +183,11 @@ export const Quiz = () => {
                                     <p className='text-black text-[11.5px] xl:text-[15px] opacity-40 mt-1'>Difficulty: <span className='font-bold capitalize'>{questionsAndAnswers[questionNumber]?.difficulty}</span></p>
                                 </div>
                             </div>
-
                             <div className='bg-white h-1/2 py-10 px-3 xl:px-8'>
                                 <div className="flex flex-col space-y-3 rounded dark:border-gray-700" key={questionNumber}>
                                     {questionsAndAnswers[questionNumber].shuffleAnswers.map((ans, i) => {
                                         return (
-                                            <button key={i} disabled={isSelected} onClick={(e) => { checkAnswer(e, questionsAndAnswers) }} data-id={unescape(ans)} className={`w-full py-2 cursor-pointer ps-2.5 text-sm xl:text-[17px] text-left rounded-md font-medium text-gray-900 bg-gray-100 border-gray-300 animate__animated animate__fadeInRight animate_${i}ms`}>
+                                            <button key={i} disabled={isSelected} ref={elementsRef.current[i]} onClick={(e) => { checkAnswer(e, questionsAndAnswers), highlightAnswer() }} data-id={unescape(ans)} className={`w-full py-2 cursor-pointer ps-2.5 text-sm xl:text-[17px] text-left rounded-md font-medium text-gray-900 bg-gray-100 border-gray-300 animate__animated animate__fadeInRight animate_${i}ms`}>
                                                 {unescape(ans)}
                                             </button>
                                         )
@@ -156,15 +199,13 @@ export const Quiz = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" className='me-1' width="16" height="16" viewBox="0 0 256 256"><path fill="black" d="M228 128a12 12 0 0 1-12 12H69l51.52 51.51a12 12 0 0 1-17 17l-72-72a12 12 0 0 1 0-17l72-72a12 12 0 0 1 17 17L69 116h147a12 12 0 0 1 12 12" /></svg>
                                     PREV
                                 </button>
-
                                 {
                                     submitBtn ?
                                         <button type="button" onClick={() => {
                                             setTimeout(() => {
                                                 setPage('score')
                                             }, 1000),
-                                            stopAudio()
-
+                                                stopAudio()
                                         }} className="text-white bg-color rounded-full text-sm px-3 flex item-center justify-center py-1.5 text-center me-2 font-semibold">
                                             SUBMIT
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" className='ms-1' viewBox="0 0 256 256"><path fill="white" d="m224.49 136.49l-72 72a12 12 0 0 1-17-17L187 140H40a12 12 0 0 1 0-24h147l-51.49-51.52a12 12 0 0 1 17-17l72 72a12 12 0 0 1-.02 17.01" /></svg>
@@ -178,7 +219,6 @@ export const Quiz = () => {
                         </div>
                     </div >
             }
-
         </>
     )
 }
